@@ -9,7 +9,8 @@
 
 library(shiny)
 library(kableExtra)
-IMO <- read.csv("IMO.csv")
+setwd("C:/Users/maria/Downloads/ShinyProject")
+IMO <- read.csv("C:/Users/maria/Downloads/ShinyProject/IMO.csv")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -48,7 +49,8 @@ ui <- fluidPage(
           
           # Add check box that updates graphs
           
-          checkboxInput("mean_line", label="Show Mean", value=FALSE),
+          checkboxInput("mean_line", label="Show Mean (numerical variable)", value=FALSE),
+          checkboxInput("add_percentage", label= "Show Percentages (categorical variable)", value = FALSE)
           
           ),
 
@@ -67,8 +69,8 @@ ui <- fluidPage(
            fluidRow(column(11,verbatimTextOutput("prop.table"))),
            
            # Display Image
-           tags$img(src = "IMO_Logo.png", style = "float: right;"),
-           tags$p("Source: International Mathematical Olympiad")
+           img(src = "IMO_logo.svg", style = "float: right;"),
+           p("Source: International Mathematical Olympiad")
            
         )
     )
@@ -121,12 +123,23 @@ server <- function(input, output) {
           }
         }else if(variable == 4){
           
-        filtered_data <- data[data$total_points >= 189 & data$total_points <= 252, ]
+         filtered_data <- data[data$total_points >= 189 & data$total_points <= 252, ]
         best_countries <- table(filtered_data$country)
         
-        pie(sort(best_countries, decreasing = TRUE),
-            main = "Top Performing Countries: Scoring 75% to 100% of Maximum Points",
-            col = rainbow(length(best_countries)))
+        if(input$add_percentage == TRUE){
+          pie(sort(best_countries, decreasing = TRUE),
+              main = "Top Performing Countries: Scoring 75% to 100% of Maximum Points",
+              col = rainbow(length(best_countries)),
+              labels = paste0(round(prop.table(best_countries) * 100, 1), "%"),
+          )
+          
+        } else{
+          pie(sort(best_countries, decreasing = TRUE),
+              main = "Top Performing Countries: Scoring 75% to 100% of Maximum Points",
+              col = rainbow(length(best_countries))
+              )
+          
+        }
           
         } else if(variable == 5){
           hist(data$year,
