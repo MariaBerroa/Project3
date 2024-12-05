@@ -1,0 +1,17 @@
+---
+title: "Shiny_Project"
+output: html_document
+date: "2024-12-05"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+source('Project3.R')
+
+```
+
+
